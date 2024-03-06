@@ -1,0 +1,25 @@
+<!-- payment.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payment Form</title>
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+  <h1>Payment Form</h1>
+  <form method="POST" action="{% url 'payment' %}">
+    {% csrf_token %}
+    <script
+      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+      data-key="{{ publishable_key }}"
+      data-amount=".1"
+      data-name="Example Company"
+      data-description="Example Charge"
+      data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+      data-locale="auto"
+      data-currency="usd">
+    </script>
+  </form>
+</body>
+</html>

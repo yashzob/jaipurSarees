@@ -1,0 +1,24 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="row">
+		{% for product in products %}
+		<div class="col-lg-4">
+			<div class="card mb-4">
+				<img class="card-img-top" src="{{ product.imageURL }}" alt="{{ product.name }}">
+				<div class="card-body">
+					<h5 class="card-title">{{ product.name }}</h5>
+					<p class="card-text">Price: Rs {{ product.price }}</p>
+					<button data-product="{{ product.id }}" data-action="add" data-user="{{ user }}" class="btn btn-outline-secondary update-cart">Add to Cart</button>
+
+					<a href="#" class="btn btn-outline-success">View</a>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+
+	<!-- Load cart.js -->
+	<script src="{% static 'js/cart.js' %}"></script>
+{% endblock content %}
