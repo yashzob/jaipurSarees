@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <link rel="stylesheet" href="{% static 'store/styles.css' %}">
+</head>
+<body>
+  <h3 style="text-align: center; margin-bottom: 20px;">Register</h3>
+  <form method="post" action="">
+    {% csrf_token %}
+    <div style="margin-bottom: 10px;">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required style="width: 100%; padding: 5px;">
+    </div>
+
+    <div style="margin-bottom: 10px;">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required style="width: 100%; padding: 5px;">
+    </div>
+    
+    <div style="margin-bottom: 10px;">
+      <label for="phone_number">Phone Number:</label>
+      +91<input type="text" id="phone_number" name="phone_number" required style="width: 100%; padding: 5px;">
+    </div>
+
+    <div style="margin-bottom: 10px;">
+      <label for="password1">Password:</label>
+      <input type="password" id="password1" name="password1" required style="width: 100%; padding: 5px;">
+    </div>
+    <div style="margin-bottom: 10px;">
+      <label for="password2">Confirm Password:</label>
+      <input type="password" id="password2" name="password2" required style="width: 100%; padding: 5px;">
+    </div>
+    
+    <div>
+      <input type="submit" value="Create User" style="background-color: #007bff; color: #fff; padding: 8px 15px; border: none; cursor: pointer;">
+    </div>
+  </form>
+</body>
+</html>
