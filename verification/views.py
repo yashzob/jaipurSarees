@@ -47,7 +47,7 @@ def register(request):
         red = redirect('otp', uid=profile.uid)  # Use the URL name for redirection
         red.set_cookie("can_otp_enter", True)
         return red  
-    return render(request, 'verification/templates/register.html')
+    return render(request, 'register.html')
 
 def otpVerify(request, uid):
     print("otpppppppppppppppppppppppppppppppppppppppppp", uid)

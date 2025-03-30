@@ -25,7 +25,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('store.urls')),
-    path('veri',include('verification.urls'),name="verification")
+    path('verireg/',include('verification.urls'),name="verification")
     #this is my main project urls
 ]
 urlpatterns +=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
