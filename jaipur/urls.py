@@ -25,6 +25,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('store.urls')),
+    path('',include('verification.urls')),
     path('verireg/',include('verification.urls'),name="verification")
     #this is my main project urls
 ]

@@ -51,12 +51,19 @@ def register(request):
 
 def otpVerify(request, uid):
     print("otpppppppppppppppppppppppppppppppppppppppppp", uid)
+    print(request)
     if request.method == "POST":
-        profile = Profile.objects.get(uid=uid)     
+        profile = Profile.objects.get(uid=uid)
+        print("OTP for verification:", profile.otp)     
+        print("Received OTP from form:", request.POST['otp'])  # Debugging statement to check the submitted OTP
+
+
         if request.COOKIES.get('can_otp_enter') != None:
             if profile.otp == request.POST['otp']:
-                red = redirect("home")
+                
+                red = redirect("store")# reditct to store\templates\store\store.html
                 red.set_cookie('verified', True)
+                print("Done")
                 return red
             return HttpResponse("wrong otp")
         return HttpResponse("10 minutes passed")        
