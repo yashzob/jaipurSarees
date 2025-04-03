@@ -11,9 +11,7 @@
 					<h5 class="card-title">{{ product.name }}</h5>
 					<p class="card-text">Price: Rs {{ product.price }}</p>
 					<button data-product="{{ product.id }}" data-action="add" data-user="{{ user }}" class="btn btn-outline-secondary update-cart">Add to Cart</button>
-
-<a href="{% url 'product_detail' product.id %}" class="btn btn-outline-success">View</a>
-
+					<a href="{% url 'product_detail' product.id %}" class="btn btn-outline-success">View</a>
 				</div>
 			</div>
 		</div>
@@ -22,4 +20,8 @@
 
 	<!-- Load cart.js -->
 	<script src="{% static 'js/cart.js' %}"></script>
+
+    {% include 'store/footer.html' %}  <!-- Include the footer here -->
+    
+    <!-- Note: The link to 'my_orders' has been removed as per user request. -->
 {% endblock content %}
