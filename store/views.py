@@ -5,9 +5,10 @@ def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     return render(request, 'store/product_detail.html', {'product': product})
 from .models import * 
+from django.http import JsonResponse
 
 from django.contrib.auth.forms import UserCreationForm
-
+import json
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -275,4 +276,4 @@ from django.shortcuts import redirect
 
 def logout_view(request):
     logout(request)
-    return redirect('login') 
+    return redirect('login')
