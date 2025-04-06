@@ -315,3 +315,25 @@ from django.shortcuts import redirect
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+def my_orders(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+        
+    customer = request.user.customer
+    orders = Order.objects.filter(customer=customer, complete=True).order_by('-date_ordered')
+    
+    # Get order items for each order
+    order_data = []
+    for order in orders:
+        items = OrderItem.objects.filter(order=order)
+        order_data.append({
+            'order': order,
+            'items': items,
+            'total': sum(item.product.price * item.quantity for item in items)
+        })
+    
+    context = {
+        'order_data': order_data
+    }
+    return render(request, 'store/my_orders.html', context)

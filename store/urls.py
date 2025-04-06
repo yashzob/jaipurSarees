@@ -17,4 +17,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('register',views.register,name='register'),
     path('order-confirmation/', views.process_cod, name='order-confirmation'),
+    path('my-orders/', views.my_orders, name='my-orders'),
 ]

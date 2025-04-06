@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+{% load static %}
 <head>
     <title>My Orders</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
@@ -13,22 +14,60 @@
                     <a class="nav-link" href="{% url 'store' %}">Store</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'my_orders' %}">My Orders</a>
+                    <a class="nav-link" href="{% url 'my-orders' %}">My Orders</a>
                 </li>
             </ul>
         </div>
     </nav>
 
     <div class="container">
+        <!-- @/store/models.py
+=============
+Selected Lines:
+
+```
+class Order(models.Model):
+	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
+	date_ordered = models.DateTimeField(auto_now_add=True)
+	complete = models.BooleanField(default=True)
+	transaction_id = models.CharField(max_length=100, null=True)
+
+```
+============= -->
+
+
         <h2>My Orders</h2>
-        <ul>
-            <!-- Placeholder for orders -->
-            {% for order in orders %}
-                <li>Order ID: {{ order.id }} - Status: {{ order.status }}</li>
+        <div class="orders-list">
+            {% for order_data in order_data %}
+            <div class="order-card">
+                <div class="order-header">
+                    <span class="order-id">Order #{{ order_data.order.id }}</span>
+                    <span class="order-date">{{ order_data.order.date_ordered|date:"F j, Y" }}</span>
+                    <span class="order-total">Total: ₹{{ order_data.total }}</span>
+                </div>
+                <div class="order-items">
+                    <h4>Items:</h4>
+                    <ul>
+                        {% for item in order_data.items %}
+                        <li>
+                            {{ item.product.name }} - 
+                            ₹{{ item.product.price }} x 
+                            {{ item.quantity }} = 
+                            ₹{% widthratio item.product.price 1 item.quantity %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="order-status">
+                    Status: {% if order_data.order.complete %}Completed{% else %}Processing{% endif %}
+                </div>
+            </div>
             {% empty %}
-                <li>No orders found.</li>
+            <div class="no-orders">
+                <p>No orders found.</p>
+            </div>
             {% endfor %}
-        </ul>
+        </div>
     </div>
 </body>
 </html>
