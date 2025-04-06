@@ -1,0 +1,28 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Order Confirmation</h3>
+                </div>
+                <div class="card-body">
+                    <h4>Thank you for your order!</h4>
+                    <p>Your order has been placed successfully.</p>
+                    <p>Payment Method: {{ payment_method }}</p>
+                    
+                    <h5>Shipping Details:</h5>
+                    <p>{{ customer_name }}</p>
+                    <p>{{ customer_email }}</p>
+                    <p>{{ shipping_address.address }}</p>
+                    <p>{{ shipping_address.city }}, {{ shipping_address.state }} {{ shipping_address.zipcode }}</p>
+                    
+                    <a href="{% url 'store' %}" class="btn btn-primary">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

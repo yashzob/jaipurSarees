@@ -112,9 +112,8 @@ from django.shortcuts import render
 from .models import ShippingAddress
 
 def save_shipping_address(request):
-    print("heman")
     if request.method == 'POST':
-        print("heman")
+        payment_method = request.POST.get('payment_method')
         name = request.POST.get('name')
         email = request.POST.get('email')
         address = request.POST.get('address')
@@ -122,20 +121,59 @@ def save_shipping_address(request):
         state = request.POST.get('state')
         zipcode = request.POST.get('zipcode')
 
-        # Create a new ShippingAddress object and save it to the database
+        if not all([name, email, address, city, state, zipcode]):
+            messages.error(request, 'Please fill all required fields')
+            return redirect('checkout')
+
+        if request.user.is_authenticated:
+            customer = request.user.customer
+            order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        else:
+            customer = None
+            order = None
+
         shipping_address = ShippingAddress(
-            customer=None,  # Replace with the actual customer instance
-            order=None,  # Replace with the actual order instance
+            customer=customer,
+            order=order,
             address=address,
             city=city,
             state=state,
             zipcode=zipcode
         )
         shipping_address.save()
-        print(request.POST)  # Output form data to the console for debugging purposes
+        
+        # Store name and email in session since they're not in ShippingAddress model
+        request.session['customer_name'] = name
+        request.session['customer_email'] = email
 
-        # Render a success message or redirect to a different page
-        return render(request, 'store/payment.html')
+        if payment_method == 'stripe':
+            return redirect('payment')
+        elif payment_method == 'cod':
+            return process_cod(request, order, shipping_address)
+        else:
+            messages.error(request, 'Invalid payment method')
+            return redirect('checkout')
+
+def process_cod(request, order, shipping_address):
+    if order:
+        order.complete = True
+        order.save()
+    
+    # Store order details in session for guest users
+    if not request.user.is_authenticated:
+        request.session['order_id'] = order.id if order else None
+        request.session['shipping_address_id'] = shipping_address.id
+        request.session.modified = True
+    
+    # Create order confirmation
+    context = {
+        'order': order,
+        'shipping_address': shipping_address,
+        'payment_method': 'Cash on Delivery',
+        'customer_name': request.session.get('customer_name', ''),
+        'customer_email': request.session.get('customer_email', '')
+    }
+    return render(request, 'store/order_confirmation.html', context)
 
 # views.py
 
