@@ -1,12 +1,12 @@
-{% extends 'store/main.html' %}
-{% load static %}
+
 
 {% block content %}
-<div class="container">
-    <h1>{{ product.name }}</h1>
-    <img src="{{ product.imageURL }}" alt="{{ product.name }}" class="img-fluid">
-    <p>Price: Rs {{ product.price }}</p>
-    <p>Description: {{ product.description }}</p>  <!-- Assuming there is a description field in the Product model -->
-    <button data-product="{{ product.id }}" data-action="add" data-user="{{ user }}" class="btn btn-outline-secondary update-cart">Add to Cart</button>
-</div>
-{% endblock content %}
+<h1>{{ product.name }}</h1>
+<p>Price: {{ product.price }}</p>
+<p>Description: {{ product.description }}</p>
+{% if product.image %}
+<img src="{{ product.image.url }}" alt="{{ product.name }}" width="200">
+{% endif %}
+
+<a href="{% url 'product_list' %}" class="btn btn-secondary">Back to List</a>
+{% endblock %}

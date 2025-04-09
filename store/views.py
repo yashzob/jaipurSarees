@@ -1,10 +1,42 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Product  # Assuming Product is the model for your products
+from django.shortcuts import render, get_object_or_404, redirect
+from .forms import ProductForm
+from .models import *
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     return render(request, 'store/product_detail.html', {'product': product})
-from .models import * 
+
+def product_list(request):
+    products = Product.objects.all()
+    return render(request, 'store/product_list.html', {'products': products})
+
+def product_create(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('product_list')
+    else:
+        form = ProductForm()
+    return render(request, 'store/newProd.html', {'form': form})
+
+def product_update(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('product_list')
+    else:
+        form = ProductForm(instance=product)
+    return render(request, 'store/newProd.html', {'form': form})
+
+def product_delete(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        product.delete()
+        return redirect('product_list')
+    return render(request, 'store/product_confirm_delete.html', {'product': product})
 from django.http import JsonResponse
 
 from django.contrib.auth.forms import UserCreationForm

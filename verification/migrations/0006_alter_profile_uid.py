@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('store', '0001_initial'),
+        ('verification', '0005_alter_profile_uid'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='order',
-            name='complete',
-            field=models.BooleanField(default=True),
+            model_name='profile',
+            name='uid',
+            field=models.CharField(default='<function uuid4 at 0x000001D0A9DC7880>', max_length=200),
         ),
     ]

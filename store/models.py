@@ -9,7 +9,7 @@ class Customer(models.Model):
     name = models.CharField(max_length=200, null=True)
     email = models.CharField(max_length=200)
     phone_number = PhoneNumberField(unique=True)
-
+    # i think here should be the password
     def __str__(self):
         return self.name
 
@@ -19,7 +19,8 @@ class Product(models.Model):
     price = models.FloatField()
     digital = models.BooleanField(default=False, null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
-
+    versioning =models.IntegerField(default=0, null=True, blank=True)
+    stock=models.IntegerField(default=50, null=True, blank=True)
     def __str__(self):
         return self.name
         
