@@ -369,3 +369,57 @@ def my_orders(request):
         'order_data': order_data
     }
     return render(request, 'store/my_orders.html', context)
+
+
+from django.db import transaction
+from django.shortcuts import get_object_or_404, redirect
+from django.core.exceptions import ValidationError
+from django.http import JsonResponse
+from .models import Product
+
+def update_product(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    current_version = product.version
+    
+    if request.method == 'POST':
+        try:
+            # Update fields from request
+            product.name = request.POST.get('name', product.name)
+            product.price = request.POST.get('price', product.price)
+            
+            # Check if stock is being updated (handled by trigger)
+            if 'stock' in request.POST:
+                product.stock = request.POST['stock']
+                product.save(skip_version_check=True)
+                return JsonResponse({'status': 'stock updated via trigger'})
+            
+            # For non-stock updates
+            if product.version != current_version:
+                # Conflict detected - use transaction
+                with transaction.atomic():
+                    fresh_product = Product.objects.select_for_update().get(pk=product_id)
+                    if fresh_product.version != current_version:
+                        return JsonResponse({
+                            'error': 'Version conflict',
+                            'current_data': {
+                                'name': fresh_product.name,
+                                'price': float(fresh_product.price),
+                                'version': fresh_product.version
+                            }
+                        }, status=409)
+                    # Update with fresh data
+                    product = fresh_product
+                    product.name = request.POST.get('name', product.name)
+                    product.price = request.POST.get('price', product.price)
+                    product.save()
+            else:
+                # No conflict - normal save
+                product.save()
+                
+            return JsonResponse({
+                'status': 'success',
+                'new_version': product.version
+            })
+            
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)

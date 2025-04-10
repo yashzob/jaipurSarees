@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.core.exceptions import ValidationError
 # Create your models here.
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -19,11 +19,25 @@ class Product(models.Model):
     price = models.FloatField()
     digital = models.BooleanField(default=False, null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
-    versioning =models.IntegerField(default=0, null=True, blank=True)
+    version = models.PositiveIntegerField(default=1)
     stock=models.IntegerField(default=50, null=True, blank=True)
     def __str__(self):
         return self.name
-        
+    
+    def save(self, *args, **kwargs):
+        if kwargs.pop('skip_version_check', False):
+            # Skip version check for stock updates handled by trigger
+            super().save(*args, **kwargs)
+            return
+            
+        if self.pk:  # Only check version for existing instances
+            current_version = Product.objects.get(pk=self.pk).version
+            if self.version != current_version:
+                raise ValidationError(
+                    "This product was modified by another user. Please refresh and try again."
+                )
+            self.version += 1
+        super().save(*args, **kwargs)   
     @property
     def imageURL(self):
         try:
