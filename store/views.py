@@ -62,6 +62,7 @@ def store(request):
     total_quantity = request.session.get('total_quantity', 0)  # Retrieve total_quantity from session
     
     context = {'products': products, 'total_quantity': total_quantity}
+def store(request):
     
     return render(request, 'store/store.html', context)
 

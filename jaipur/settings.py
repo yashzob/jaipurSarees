@@ -32,6 +32,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+CSRF_TRUSTED_ORIGINS = ['https://62a7-103-211-53-66.ngrok-free.app']
+
+# CSRF_TRUSTED_ORIGINS = [
+#     '*',
+# ]
+
 
 # Application definition
 #AUTH_USER_MODEL = 'store.Customer'

@@ -57,13 +57,33 @@ document.addEventListener('DOMContentLoaded', function() {
             codButton.disabled = true;
             codButton.textContent = 'Processing...';
             
+            // Get CSRF token - try multiple ways to be robust
+            function getCSRFToken() {
+                const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+                if (csrfInput) return csrfInput.value;
+                
+                const csrfCookie = document.cookie.match(/csrftoken=([^;]+)/);
+                if (csrfCookie) return csrfCookie[1];
+                
+                console.error('Could not find CSRF token');
+                return null;
+            }
+
+            const csrfToken = getCSRFToken();
+            if (!csrfToken) {
+                alert('Security error: Please refresh the page and try again');
+                return;
+            }
+
             // Submit the form data
             fetch(form.action, {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                }
+                    'X-CSRFToken': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin'
             })
             .then(response => {
                 if (response.redirected) {
