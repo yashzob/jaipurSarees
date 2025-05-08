@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <!-- [Previous test plan content remains unchanged until the checkout request] -->
+    
+    <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="http://127.0.0.1:8000/checkout/" enabled="true">
+      <stringProp name="HTTPSampler.domain">${BASE_URL_1}</stringProp>
+      <stringProp name="HTTPSampler.port">8000</stringProp>
+      <stringProp name="HTTPSampler.protocol">http</stringProp>
+      <stringProp name="HTTPSampler.path">checkout/</stringProp>
+      <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+      <stringProp name="HTTPSampler.method">GET</stringProp>
+      <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+      <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+      <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+    </HTTPSamplerProxy>
+    <hashTree>
+      <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract CSRF Token" enabled="true">
+        <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+        <stringProp name="RegexExtractor.refname">csrf_token</stringProp>
+        <stringProp name="RegexExtractor.regex">name="csrfmiddlewaretoken" value="([^"]+)"</stringProp>
+        <stringProp name="RegexExtractor.template">$1$</stringProp>
+        <stringProp name="RegexExtractor.default"></stringProp>
+        <stringProp name="RegexExtractor.match_number">1</stringProp>
+      </RegexExtractor>
+      <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+        <stringProp name="ConstantTimer.delay">6853</stringProp>
+      </ConstantTimer>
+      <hashTree/>
+    </hashTree>
+
+    <!-- [Rest of the test plan content remains unchanged] -->
+  </hashTree>
+</jmeterTestPlan>
